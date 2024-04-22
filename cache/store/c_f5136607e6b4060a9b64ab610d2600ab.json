@@ -1,0 +1,553 @@
+{
+    "name": "App\\Models\\Produto",
+    "line": 25,
+    "short_desc": "Class Produto",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "package": [
+            [
+                "App\\Models"
+            ]
+        ],
+        "property": [
+            [
+                [
+                    [
+                        "int",
+                        false
+                    ]
+                ],
+                "id",
+                ""
+            ],
+            [
+                [
+                    [
+                        "string",
+                        false
+                    ]
+                ],
+                "nome",
+                ""
+            ],
+            [
+                [
+                    [
+                        "string",
+                        false
+                    ]
+                ],
+                "descricao",
+                ""
+            ],
+            [
+                [
+                    [
+                        "float",
+                        false
+                    ]
+                ],
+                "preco",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Illuminate\\Support\\Carbon",
+                        false
+                    ]
+                ],
+                "data_validade",
+                ""
+            ],
+            [
+                [
+                    [
+                        "string",
+                        false
+                    ]
+                ],
+                "imagem",
+                ""
+            ],
+            [
+                [
+                    [
+                        "int",
+                        false
+                    ]
+                ],
+                "categoria_id",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Illuminate\\Support\\Carbon",
+                        false
+                    ]
+                ],
+                "created_at",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Illuminate\\Support\\Carbon",
+                        false
+                    ]
+                ],
+                "updated_at",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\App\\Models\\Categoria",
+                        false
+                    ]
+                ],
+                "categoria",
+                ""
+            ]
+        ]
+    },
+    "namespace": "App\\Models",
+    "file": "backend\/app\/Models\/Produto.php",
+    "relative_file": "backend\/app\/Models\/Produtophp",
+    "hash": "4a66f632fbb4b45c6154ae4ec91b93a82f053434",
+    "parent": "Illuminate\\Database\\Eloquent\\Model",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "is_read_only": false,
+    "aliases": {
+        "HasFactory": "Illuminate\\Database\\Eloquent\\Factories\\HasFactory",
+        "Model": "Illuminate\\Database\\Eloquent\\Model"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": {
+        "Illuminate\\Database\\Eloquent\\Factories\\HasFactory": "Illuminate\\Database\\Eloquent\\Factories\\HasFactory"
+    },
+    "properties": {
+        "fillable": {
+            "name": "fillable",
+            "line": 34,
+            "short_desc": "The attributes that are mass assignable.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 2,
+            "default": {
+                "nodeType": "Expr_Array",
+                "attributes": {
+                    "startLine": 34,
+                    "endLine": 41,
+                    "kind": 2
+                },
+                "items": [
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 35,
+                            "endLine": 35
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 35,
+                                "endLine": 35,
+                                "kind": 1,
+                                "rawValue": "'nome'"
+                            },
+                            "value": "nome"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 36,
+                            "endLine": 36
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 36,
+                                "endLine": 36,
+                                "kind": 1,
+                                "rawValue": "'descricao'"
+                            },
+                            "value": "descricao"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 37,
+                            "endLine": 37
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 37,
+                                "endLine": 37,
+                                "kind": 1,
+                                "rawValue": "'preco'"
+                            },
+                            "value": "preco"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 38,
+                            "endLine": 38
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 38,
+                                "endLine": 38,
+                                "kind": 1,
+                                "rawValue": "'data_validade'"
+                            },
+                            "value": "data_validade"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 39,
+                            "endLine": 39
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 39,
+                                "endLine": 39,
+                                "kind": 1,
+                                "rawValue": "'imagem'"
+                            },
+                            "value": "imagem"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 40,
+                            "endLine": 40
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 40,
+                                "endLine": 40,
+                                "kind": 1,
+                                "rawValue": "'categoria_id'"
+                            },
+                            "value": "categoria_id"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    }
+                ]
+            },
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "dates": {
+            "name": "dates",
+            "line": 48,
+            "short_desc": "The attributes that should be cast to native types.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 2,
+            "default": {
+                "nodeType": "Expr_Array",
+                "attributes": {
+                    "startLine": 48,
+                    "endLine": 48,
+                    "kind": 2
+                },
+                "items": [
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "attributes": {
+                            "startLine": 48,
+                            "endLine": 48
+                        },
+                        "key": null,
+                        "value": {
+                            "nodeType": "Scalar_String",
+                            "attributes": {
+                                "startLine": 48,
+                                "endLine": 48,
+                                "kind": 1,
+                                "rawValue": "'data_validade'"
+                            },
+                            "value": "data_validade"
+                        },
+                        "byRef": false,
+                        "unpack": false
+                    }
+                ]
+            },
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "id": {
+            "name": "id",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "int",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "nome": {
+            "name": "nome",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "descricao": {
+            "name": "descricao",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "preco": {
+            "name": "preco",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "float",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "data_validade": {
+            "name": "data_validade",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Illuminate\\Support\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "imagem": {
+            "name": "imagem",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "categoria_id": {
+            "name": "categoria_id",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "int",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "created_at": {
+            "name": "created_at",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Illuminate\\Support\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "updated_at": {
+            "name": "updated_at",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Illuminate\\Support\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        },
+        "categoria": {
+            "name": "categoria",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\App\\Models\\Categoria",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": [],
+            "is_read_only": false,
+            "is_write_only": false,
+            "is_intersection_type": false
+        }
+    },
+    "methods": {
+        "categoria": {
+            "name": "categoria",
+            "line": 53,
+            "short_desc": "Get the category that the product belongs to.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "see": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "is_intersection_type": false,
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

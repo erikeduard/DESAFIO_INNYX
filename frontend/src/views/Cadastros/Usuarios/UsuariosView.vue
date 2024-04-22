@@ -1,0 +1,347 @@
+<script setup lang="ts">
+import type { IAuthStore } from '@/stores/auth.store';
+import { useAuthStore } from '@/stores/auth.store';
+import DataTable from 'primevue/datatable';
+import Paginator from 'primevue/paginator';
+import Column from 'primevue/column';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
+import Message from 'primevue/message';
+import Password from 'primevue/password';
+import Checkbox from 'primevue/checkbox';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+
+import { onMounted, ref, computed } from 'vue';
+import api from '@/services/api';
+import Swal from 'sweetalert2';
+import cloneDeep from 'lodash/cloneDeep';
+import { type dadosPaginacaoInterface, type eventPaginator, extrairDadosResponse } from "@/scripts/utils/HelperPaginacao";
+
+
+const auth = useAuthStore() as IAuthStore;
+const carregando = ref(false); // preload da tabela
+const alterando = ref(false);
+const preloadForm = ref(false);
+const salvo = ref(false);
+const lista = ref([]);
+const alterarSenha = ref(false);
+const modalAberta = ref(false);
+
+const dadosPaginacao = ref<dadosPaginacaoInterface & { campoBusca: string }>({
+    page: 1, // para o laravel
+    from: 0, // para o paginator
+    per_page: +import.meta.env.VITE_APP_POR_PAGINA, // conversão para number. para o laravel
+    total: 0,
+    campoBusca: '',
+})
+const trocaPagina = (event: eventPaginator) => {
+    dadosPaginacao.value.page = event.page + 1
+    buscar();
+}
+
+const campoBusca = ref('');
+
+
+const form = ref<{ id: null | number,name: string,  email:  string, password?: string, password_confirmation?: string, redefinirSenha: boolean  }>({
+    
+    id: null,
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    redefinirSenha: false,
+});
+const formDefault = {
+    id: null,
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    redefinirSenha: false,
+};
+
+
+const formReset = () => {
+    form.value = cloneDeep(formDefault)
+}
+
+const podeCadastrarAlterar = computed((): boolean => {
+    return form.value.name.length >= 3
+        && form.value.password.length >= 6
+        && confirmasenha.value
+        && validaEmail();
+
+})
+
+const confirmasenha = computed((): boolean => {
+    return form.value.password == form.value.password_confirmation;
+})
+
+const validaEmail  = (): boolean => {
+    let email = form.value.email;
+    if (email === "" || email === null || email === undefined) {
+        return true;
+    }
+    let re = /\S+@\S+\.\S+/;
+    return re.test(email);
+}
+
+const cadastrar = () => {
+    modalAberta.value = true;
+    preloadForm.value = true;
+    salvo.value = false;
+    let dados = {
+        ...form.value,
+    }
+
+    api.post('usuarios', dados).then((res) => {
+        salvo.value = true;
+    }).finally(() => {
+        preloadForm.value = false;
+        atualizar();
+    });
+
+};
+
+const formAlterar = (id) => {
+    modalAberta.value = true;
+    preloadForm.value = true;
+    alterando.value = true;
+    form.value.id = 1;
+    api.get(`usuarios/${id}/edit`).then((res) => {
+        form.value.name = res.data.name;
+        form.value.email = res.data.email;
+        form.value.id = res.data.id;
+    }).finally(() => {
+        preloadForm.value = false;
+    });
+};
+
+
+const alterar = () => {
+    preloadForm.value = true;
+
+    let dados = {
+        id: form.value.id,
+        name: form.value.name,
+        email: form.value.email,
+    }
+
+    if (alterarSenha.value) {
+        dados = {
+            id: form.value.id,
+            name: form.value.name,
+            email: form.value.email,
+            password: form.value.password,
+            password_confirmation: form.value.password_confirmation,
+            redefinirSenha: true,   
+        }
+    }
+
+    api.put(`usuarios/${form.value.id}`, dados).then((res) => {
+        salvo.value = true;
+        buscar();
+    }).finally(() => {
+        preloadForm.value = false;
+    });
+
+};
+
+
+const apagar = (id) => {
+    Swal.fire({
+        title: 'Deseja realmente excluir?',
+        text: "Você não poderá reverter esta ação!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            api.delete(`usuarios/${id}`).then((res) => {
+                Swal.fire(
+                    'Excluído!',
+                    'Usuario(a) excluído com sucesso.',
+                    'success'
+                )
+                atualizar();
+            })
+        }
+    })
+};
+
+const fecharModal = () => {
+    salvo.value = false;
+    preloadForm.value = false;
+    modalAberta.value = false;
+    alterando.value = false;
+    alterarSenha.value = false;
+    formReset();
+};
+
+const buscar = () => {
+    carregando.value = true;
+    dadosPaginacao.value.campoBusca = campoBusca.value;
+    api.get('usuarios', {
+        params: dadosPaginacao.value
+    }).then((res) => {
+        lista.value = res.data.data;
+        dadosPaginacao.value = { ...dadosPaginacao.value, ...extrairDadosResponse(res.data) }
+        carregando.value = false;
+    })
+};
+
+//para caso não use o botao do pesquisar
+const atualizar = () => {
+    carregando.value = true;
+    dadosPaginacao.value.page = 1;
+    dadosPaginacao.value.campoBusca = campoBusca.value;
+    api.get('usuarios', {
+        params: dadosPaginacao.value
+    }).then((res) => {
+        lista.value = res.data.data;
+        dadosPaginacao.value.per_page = res.data.per_page;
+        carregando.value = false;
+    })
+};
+
+
+
+
+onMounted(() => {
+    carregando.value = true;
+    api.get('usuarios', {
+        params: dadosPaginacao.value
+    }).then((res) => {
+        dadosPaginacao.value = { ...dadosPaginacao.value, ...extrairDadosResponse(res.data) }
+        lista.value = res.data.data;        
+        carregando.value = false;
+    })
+})
+
+
+</script>
+
+<template>
+    <Dialog v-model:visible="modalAberta" modal :header='alterando ? "Alterando Usuário(a)" : "Cadastrando Usuário(a)"'
+        :closable="true" :closeOnEscape="false" :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }" @hide="fecharModal">
+
+        <div class="inline-flex align-items-center justify-content-center gap-2" v-if="preloadForm">
+            <ProgressSpinner />
+        </div>
+
+        <div v-if="!preloadForm && !salvo" class="flex flex-column gap-2">
+            <div class="flex flex-column gap-2">
+                <form @submit.prevent action="" class="flex flex-column gap-2 ">
+
+                    <label for="nome">Nome</label>
+                    <span>
+                        <InputText class="w-full" size="large" id="nome" v-model="form.name"
+                            aria-describedby="nome-help" placeholder="Nome do usuário(a)" />
+                    </span>
+
+                    <label for="login">Login</label>
+                    <span>
+                        <InputText class="w-full" size="large" id="login" v-model="form.email"
+                            aria-describedby="login-help" placeholder="Login"/>
+                        <small v-if="!validaEmail()" class="p-error" id="login-help">E-mail inválido</small>
+                    </span>
+                    <span v-if="alterando">
+                        <Checkbox v-model="alterarSenha" :binary="true" label="Redefinir senha" inputId="alterasenha" />
+                        <label for="alterasenha" class="ml-2">Redefinir Senha</label>
+                    </span>
+
+                    <span v-if="alterarSenha || !alterando" class="flex flex-column gap-2 ">
+                        <label>Senha</label>
+                        <Password inputClass="w-full" id="senha" v-model="form.password" toggleMask
+                            :feedback="false"  />
+                        <label>Redigitar senha</label>
+                        <Password inputClass="w-full" id="password_confirmation"
+                            v-model="form.password_confirmation" toggleMask :feedback="false" 
+                            aria-describedby="dd-password_confirmation" />
+                        <small v-if="!confirmasenha" class="p-error" id="dd-password_confirmation">A senha não
+                            confere</small>
+                    </span>
+                </form>
+            </div>
+        </div>
+
+        <div class="flex flex-column">
+            <Message v-if="salvo && !form.id" severity="success">Usuário(a) Cadatrado com sucesso!</Message>
+            <Message v-if="salvo && form.id" severity="success">Usuário(a) Alterado com sucesso!</Message>
+        </div>
+
+        <template #footer>
+                <Button v-if="!preloadForm" @click="modalAberta = false" class="w-full" severity="secondary"
+                    label="Fechar" />
+                <Button :disabled="!podeCadastrarAlterar " class="w-full"
+                    v-if="!salvo && !form.id && !preloadForm && !alterando" icon="pi pi-database" label="Cadastrar"
+                    @click="cadastrar()" />
+                <Button :disabled="!confirmasenha || !alterando" class="w-full" v-if="!salvo && form.id && !preloadForm"
+                    icon="pi pi-pencil" label="Alterar" @click="alterar()" />
+        </template>
+    </Dialog>
+
+    <div class="container-fluid">
+        <div class="card">
+            <h2 class="titulo">USUÁRIOS</h2>
+        </div>
+        <div class="card flex flex-wrap justify-content-right gap-3">
+            <div class="card flex justify-content-center">
+                <form @submit.prevent="buscar" class="flex flex-column gap-2">
+                    <label for="username">Buscar</label>
+                    <span>
+                        <IconField iconPosition="right">
+                            <InputIcon class="pi pi-search" @click="buscar()"></InputIcon>
+                            <InputText v-model="campoBusca" autocomplete="false" aria-describedby="username-help" placeholder="Nome do usuário(a) ou email" />
+                        </IconField>
+                    </span>
+                </form>
+            </div>
+        </div>
+        <div class="flex flex-wrap justify-content-right gap-3 mt-2">
+            <Button :disabled="carregando" icon="pi pi-refresh" label="Atualizar" @click="atualizar()" />
+            <Button icon="pi pi-database"  label="Cadastrar" severity="info" @click="modalAberta = true" />
+        </div>
+
+
+        <div class="flex align-items-center justify-content-center gap-2" v-if="carregando">
+            <ProgressSpinner />
+        </div>
+        <div class="cards mt-4" v-if="lista.length > 0 && !carregando">
+            <DataTable :value="lista" stripedRows tableStyle="min-width: 50rem">
+                <Column  field="id" header="ID" />
+                <Column  field="name" header="Nome" /> 
+                <Column  field="email" header="E-mail" />
+                <Column>
+                    <template #body="{ data }">
+                        <div class="flex flex-wrap  justify-content-center gap-2 mt-2 ">
+                            <Button  icon="pi pi-pencil" severity="secondary"
+                                label="Alterar" @click="formAlterar(data.id)" />
+                            <Button  icon="pi pi-trash" severity="danger"
+                                label="Excluir" @click="apagar(data.id)" />
+                        </div>
+                    </template>
+                </Column>
+            </DataTable>
+            <Paginator class="flex align-items-center justify-content-center" @page="trocaPagina"
+                :rows="dadosPaginacao.per_page" :totalRecords="dadosPaginacao.total" :first="dadosPaginacao.from - 1"
+                template="CurrentPageReport PrevPageLink NextPageLink"
+                currentPageReportTemplate="Total encontrado: {totalRecords} | Página {currentPage} de {totalPages}">
+                <template #end class="flex">
+                    <Button severity="secondary" text rounded type="button" icon="pi pi-refresh" @click="buscar" />
+                </template>
+            </Paginator>
+        </div>
+        <h2 class="text-center text-default" v-if="lista.length == 0 && !carregando"> Nenhum registro encontrado</h2>
+    </div>
+</template>
+
+<style></style>
